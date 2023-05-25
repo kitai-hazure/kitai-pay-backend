@@ -1,0 +1,17 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateNotificationInput {
+  body: String!
+  title: String!
+}
+
+type Mutation {
+  createNotification(createNotificationInput: CreateNotificationInput!): String!
+  setPro(setProInput: String!): String!
+}
+
+type Query {
+  getPro: String!
+}

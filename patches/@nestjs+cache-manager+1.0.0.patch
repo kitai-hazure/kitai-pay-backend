@@ -1,0 +1,13 @@
+diff --git a/node_modules/@nestjs/cache-manager/dist/interceptors/cache.interceptor.js b/node_modules/@nestjs/cache-manager/dist/interceptors/cache.interceptor.js
+index 702a3b0..fb2391c 100644
+--- a/node_modules/@nestjs/cache-manager/dist/interceptors/cache.interceptor.js
++++ b/node_modules/@nestjs/cache-manager/dist/interceptors/cache.interceptor.js
+@@ -89,7 +89,7 @@ let CacheInterceptor = class CacheInterceptor {
+     }
+     isRequestCacheable(context) {
+         const req = context.switchToHttp().getRequest();
+-        return this.allowedMethods.includes(req.method);
++        return this.allowedMethods.includes(req?.method);
+     }
+ };
+ __decorate([
