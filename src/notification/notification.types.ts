@@ -7,4 +7,7 @@ export class CreateNotificationInput {
 
   @Field()
   body: string;
+
+  @Field(() => [String])
+  walletAddresses: string[] | undefined;
 }

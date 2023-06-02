@@ -5,11 +5,14 @@
 input CreateNotificationInput {
   body: String!
   title: String!
+  walletAddresses: [String!]!
 }
 
 type Mutation {
+  broadcastNotification(body: String!, title: String!): String!
   createNotification(createNotificationInput: CreateNotificationInput!): String!
   setPro(setProInput: String!): String!
+  storeFCMToken(fcmToken: String!): String!
 }
 
 type Query {

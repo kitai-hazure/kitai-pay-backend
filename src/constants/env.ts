@@ -10,4 +10,5 @@ export const ENV = {
   MONGODB_URL: process.env.MONGODB_URL,
   JWT_SECRET: process.env.JWT_SECRET,
   FCM_SERVER_KEY: process.env.FCM_SERVER_KEY,
+  KITAI_ADMIN_WALLET_ADDRESS: process.env.KITAI_ADMIN_WALLET_ADDRESS,
 };

@@ -37,6 +37,7 @@ import { NotificationModule } from "./notification/notification.module";
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       installSubscriptionHandlers: false,
+      context: ({ req }) => ({ req }),
     }),
     MongooseModule.forRoot(ENV.MONGODB_URL),
     ProModule,

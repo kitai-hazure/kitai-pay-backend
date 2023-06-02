@@ -7,10 +7,10 @@ const FCM_INSTANCE = new FCM(ENV.FCM_SERVER_KEY);
 export const sendPushNotification = ({
   title,
   body,
-  fcmToken,
+  fcmTokens,
 }: ISendMessageType) => {
   const MESSAGE_TO_SEND = {
-    to: fcmToken,
+    registration_ids: fcmTokens,
     notification: {
       title,
       body,

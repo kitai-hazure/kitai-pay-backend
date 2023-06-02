@@ -1,6 +1,7 @@
 {
   "name": "kitai-pay",
   "version": "0.0.1",
+  "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -83,15 +84,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "main": ".eslintrc.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kitai-hazure/kitai-pay-backend.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kitai-hazure/kitai-pay-backend/issues"
-  },
-  "homepage": "https://github.com/kitai-hazure/kitai-pay-backend#readme",
-  "description": ""
+  }
 }
