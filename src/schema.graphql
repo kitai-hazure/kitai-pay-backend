@@ -11,10 +11,36 @@ input CreateNotificationInput {
 type Mutation {
   broadcastNotification(body: String!, title: String!): String!
   createNotification(createNotificationInput: CreateNotificationInput!): String!
+  createPayment(payment_input: PaymentInput!): String!
   setPro(setProInput: String!): String!
   storeFCMToken(fcmToken: String!): String!
 }
 
+type PaymentArray {
+  _id: String!
+  paymentID: Float!
+  receivers: [PaymentReturn!]!
+  senders: [PaymentReturn!]!
+}
+
+input PaymentAtom {
+  amount: Float!
+  token: String!
+  user: String!
+}
+
+input PaymentInput {
+  receivers: [PaymentAtom!]!
+  senders: [PaymentAtom!]!
+}
+
+type PaymentReturn {
+  amount: Float!
+  token: String!
+  user: String!
+}
+
 type Query {
+  getPayments: [PaymentArray!]!
   getPro: String!
 }

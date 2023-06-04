@@ -16,8 +16,8 @@ export class ContractController {
       "contract"
     );
     sendPushNotificationToTopic({
-      title: "New Contract",
-      body: "A new contract has been created",
+      title: "Event from Webhook",
+      body: "A new event has been created check kitai pay",
       topicName: "contract",
       data: body,
     });

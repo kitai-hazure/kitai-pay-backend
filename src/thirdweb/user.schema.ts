@@ -3,7 +3,9 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { Schema as MongooseSchema } from "mongoose";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-@Schema()
+@Schema({
+  timestamps: true,
+})
 @ObjectType()
 export class User {
   @Field(() => String)
@@ -16,6 +18,10 @@ export class User {
   @Prop({ required: false })
   @Field(() => String, { description: "User FCM Token" })
   fcmToken: string;
+
+  @Prop({ required: false })
+  @Field(() => MongooseSchema.Types.ObjectId, { description: "Payment IDS" })
+  paymentIDs: MongooseSchema.Types.ObjectId[];
 }
 
 export type UserDocument = User & Document;

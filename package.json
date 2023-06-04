@@ -27,7 +27,7 @@
     "apollo-server-express": "^3.11.1",
     "cache-manager": "^4.1.0",
     "cache-manager-redis-store": "^2.0.0",
-    "ethers": "^6.3.0",
+    "ethers": "^6.4.1",
     "fcm-node": "^1.6.1",
     "graphql": "^16.6.0",
     "mongoose": "^6.8.3",

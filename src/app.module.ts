@@ -15,7 +15,8 @@ import { CacheInterceptor, CacheModule } from "@nestjs/cache-manager";
 import { ENV } from "./constants";
 import { ThirdwebModule } from "./thirdweb/thirdweb.module";
 import { NotificationModule } from "./notification/notification.module";
-import { ContractModule } from './contract/contract.module';
+import { ContractModule } from "./contract/contract.module";
+import { PaymentsModule } from "./payments/payments.module";
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { ContractModule } from './contract/contract.module';
     ThirdwebModule,
     NotificationModule,
     ContractModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [
