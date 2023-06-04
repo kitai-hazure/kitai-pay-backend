@@ -9,14 +9,14 @@ import { PaymentArray, PaymentInput } from "./payment.types";
 export class PaymentsResolver {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Mutation(() => String)
+  @Mutation(() => Number)
   @UseGuards(AuthGuard)
   async createPayment(
     @Args("payment_input") payment_input: PaymentInput,
     @User() user
-  ): Promise<string> {
+  ): Promise<number> {
     if (!user) {
-      return "User is not authenticated. Please try again";
+      throw new Error("User not found");
     }
 
     return await this.paymentsService.createPayment(payment_input, user);

@@ -24,77 +24,80 @@ export class PaymentsService {
   async createPayment(
     payment_object: PaymentInput,
     user: any
-  ): Promise<string> {
+  ): Promise<number> {
     try {
       const { senders, receivers } = payment_object;
       const paymentID = await getPaymentID(this.paymentIDModel);
       await updatePaymentID(this.paymentIDModel);
 
       if (senders.length === 0 || receivers.length === 0) {
-        return "Please provide at least one sender and one receiver";
-      }
-      const sendersForContract = [];
-      const receiversForContract = [];
-
-      for (let i = 0; i < senders.length; i++) {
-        // get wallet address of senders
-        const sender = senders[i];
-        const senderUser = await this.userModel.findOne({ _id: sender.user });
-        const senderWalletAddress = senderUser.address;
-        sendersForContract.push({
-          user: senderWalletAddress,
-          token: sender.token,
-          amount: sender.amount,
-        });
+        throw new Error("Invalid Payment");
       }
 
-      for (let i = 0; i < receivers.length; i++) {
-        const receiver = receivers[i];
-        const receiverUser = await this.userModel.findOne({
-          _id: receiver.user,
-        });
-        const receiverWalletAddress = receiverUser.address;
-        receiversForContract.push({
-          user: receiverWalletAddress,
-          token: receiver.token,
-          amount: receiver.amount,
-        });
-      }
       // hashing the data and sending it to the smart contract
       const hashedInput = {
-        senders: sendersForContract,
-        receivers: receiversForContract,
+        senders,
+        receivers,
       };
       const SIGNATURE = HASH_PAYMENT(hashedInput, paymentID);
-      await KITAI_PAY_CONTRACT.addPaymentSignature(paymentID, SIGNATURE);
+      try {
+        await KITAI_PAY_CONTRACT.addPaymentSignature(paymentID, SIGNATURE);
+      } catch (err) {
+        console.log("ERROR IN CONTRACT: ", err);
+        throw err;
+      }
 
       const newPayment = new this.paymentModel({
         paymentID,
-        senders,
-        receivers,
+        senders: [],
+        receivers: [],
         owner: user._id,
       });
 
       await newPayment.save();
+
+      const senderForDB = [];
+      const receiverForDB = [];
       const fcmTokens = [];
 
       for (let i = 0; i < senders.length; i++) {
-        const sender = senders[i];
-        const senderUser = await this.userModel.findOne({ _id: sender.user });
-        fcmTokens.push(senderUser.fcmToken);
-        senderUser.paymentIDs.push(newPayment._id);
-        await senderUser.save();
+        const senderDb = await this.userModel.findOne({
+          address: senders[i].user,
+        });
+        fcmTokens.push(senderDb.fcmToken);
+        senderDb.paymentIDs.push(newPayment._id);
+        await senderDb.save();
+        const objToPush = {
+          user: senderDb._id.toString(),
+          token: senders[i].token,
+          amount: senders[i].amount,
+        };
+        senderForDB.push(objToPush);
       }
 
       for (let i = 0; i < receivers.length; i++) {
-        const receiver = receivers[i];
-        const receiverUser = await this.userModel.findOne({
-          _id: receiver.user,
+        const receiverDb = await this.userModel.findOne({
+          address: receivers[i].user,
         });
-        fcmTokens.push(receiverUser.fcmToken);
-        receiverUser.paymentIDs.push(newPayment._id);
-        await receiverUser.save();
+        fcmTokens.push(receiverDb.fcmToken);
+        receiverDb.paymentIDs.push(newPayment._id);
+        await receiverDb.save();
+        const objToPush = {
+          user: receiverDb._id.toString(),
+          token: receivers[i].token,
+          amount: receivers[i].amount,
+        };
+        receiverForDB.push(objToPush);
       }
+
+      const newPay = await this.paymentModel.findOneAndUpdate(
+        { _id: newPayment._id },
+        {
+          senders: senderForDB,
+          receivers: receiverForDB,
+        }
+      );
+      await newPay.save();
 
       // subscribe this to a paymentid topic and send notification
       subscribeToTopic(fcmTokens, newPayment._id.toString());
@@ -108,7 +111,7 @@ export class PaymentsService {
         },
       });
 
-      return "Payment created syccessfully";
+      return paymentID;
       // add this paymentid to the user's payment history
     } catch (err) {
       console.log("ERROR: ", err);

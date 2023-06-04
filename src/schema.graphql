@@ -11,7 +11,7 @@ input CreateNotificationInput {
 type Mutation {
   broadcastNotification(body: String!, title: String!): String!
   createNotification(createNotificationInput: CreateNotificationInput!): String!
-  createPayment(payment_input: PaymentInput!): String!
+  createPayment(payment_input: PaymentInput!): Float!
   setPro(setProInput: String!): String!
   storeFCMToken(fcmToken: String!): String!
 }
